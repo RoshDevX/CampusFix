@@ -1,13 +1,15 @@
-const dns = require("node:dns");
+require("dotenv").config();
 
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+const dns = require("dns");
+
+// Use Google DNS only during local development
+if (process.env.NODE_ENV !== "production") {
+    dns.setServers(["8.8.8.8", "8.8.4.4"]);
+}
 
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const path = require("path");
-
-require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const complaintRoutes = require("./routes/complaintRoutes");
@@ -18,7 +20,6 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));      //This tells Express to make images inside the uploads folder accessible through URLs.
 
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
@@ -39,7 +40,7 @@ async function startServer() {
         console.log("MongoDB connected successfully!");
 
         app.listen(PORT, () => {
-            console.log(`Server running at http://localhost:${PORT}`);
+            console.log(`Server running on port ${PORT}`);
         });
     }
     catch (error) {

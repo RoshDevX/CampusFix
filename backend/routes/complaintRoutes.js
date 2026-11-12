@@ -24,7 +24,7 @@ router.post(
                 description
             } = req.body;
 
-            const photoPath = req.file ? `/uploads/${req.file.filename}` : "";
+            const photoPath = req.file ? req.file.path : "";
 
             // Validate required fields
             if (!title || !category || !location || !description) {

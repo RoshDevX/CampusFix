@@ -1,27 +1,21 @@
+
 const multer = require("multer");
-const path = require("path");     //provides utilities for working with file and directory paths.
-const fs = require("fs");          //allows us to interact with files and folders.
+const { v2: cloudinary } = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-
-// Create uploads folder if it doesn't exist
-const uploadDir = "uploads";
-
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
-
-// Configure where uploaded images will be stored
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir);
-    },
-
-    filename: function (req, file, cb) {
-        const uniqueName =
-            Date.now() + "-" + Math.round(Math.random() * 1e9);
-
-        cb(null, uniqueName + path.extname(file.originalname).toLowerCase());
+// Configure Cloudinary storage for Multer
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: "campusfix/complaints",
+        allowed_formats: ["jpg", "jpeg", "png"],
     },
 });
 

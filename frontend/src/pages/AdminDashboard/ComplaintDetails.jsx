@@ -146,7 +146,7 @@ function ComplaintDetails() {
                     </h3>
 
                     <img
-                      src={`${import.meta.env.VITE_API_URL}${complaint.photo}`}
+                      src={complaint.photo}
                       alt="Complaint evidence"
                       className="mt-3 max-h-96 w-full rounded-xl border border-slate-200 bg-slate-50 object-contain"
                     />
